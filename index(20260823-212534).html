@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hakem Hataları</title>
+
+<style>
+
+/* ==============================
+   GENEL
+============================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f7f9fa;
+    color: #333;
+}
+
+
+/* ==============================
+   ÜST MENÜ
+============================== */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 15px 5%;
+    border-bottom: 2px solid #eaeaea;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-weight: bold;
+    color: #800020;
+    font-size: 20px;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #800020;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 2px solid #800020;
+    padding-bottom: 5px;
+}
+
+
+/* ==============================
+   ANA SAYFA
+============================== */
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    margin-bottom: 20px;
+    color: #800020;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+
+/* ==============================
+   MAÇ KARTI
+============================== */
+
+.card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid #e1e8ed;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+}
+
+.card-header {
+    background: #fdfdfd;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: #777;
+}
+
+.skor-etiket {
+    font-weight: bold;
+    background: #eee;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #333;
+}
+
+.posizyon-gorsel {
+    height: 200px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.etiket {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #800020;
+    color: white;
+    padding: 5px 9px;
+    font-size: 13px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.hafta-etiket {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px 9px;
+    font-size: 13px;
+    border-radius: 4px;
+    font-weight: 750;
+}
+
+
+.detayi-gor {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    background: rgba(255,255,255,0.94);
+    color: #800020;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+
+.card-body {
+    padding: 18px 12px;
+    text-align: center;
+}
+
+.mac-baslik {
+    font-size: 16px;
+    font-weight: bold;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+}
+
+.mini-logo {
+    width: 62px;
+    height: 62px;
+    object-fit: contain;
+}
+
+
+/* ==============================
+   ÇOK YAKINDA
+============================== */
+
+.cok-yakinda {
+    position: fixed;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-size: 64px;
+    font-weight: 800;
+    color: #800020;
+
+    background: white;
+    padding: 20px 30px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+
+    z-index: 500;
+
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+/* ==============================
+   POPUP
+============================== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.75);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: 0.3s;
+}
+
+.modal-overlay:target {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-box {
+    background: white;
+
+    width: 95%;
+    max-width: 700px;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    max-height: 88vh;
+    overflow-y: auto;
+
+    position: relative;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-close {
+    position: absolute;
+
+    top: 15px;
+    right: 20px;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    color: #888;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
+.modal-title {
+    font-size: 19px;
+    font-weight: bold;
+
+    border-bottom: 1px solid #eee;
+
+    padding-bottom: 12px;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+}
+
+
+/* ==============================
+   TAKIMLAR / SKOR
+============================== */
+
+.takimlar-skor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px;
+
+    border: 1px solid #eee;
+    border-radius: 12px;
+
+    margin-bottom: 20px;
+
+    text-align: center;
+}
+
+.takim-alan {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.takim-logo {
+    width: 100px;
+    height: 100px;
+
+    object-fit: contain;
+
+    margin-bottom: 8px;
+}
+
+.skor-merkez {
+    min-width: 120px;
+    font-weight: bold;
+}
+
+.skor-rakam {
+    font-size: 30px;
+}
+
+.mac-dakika {
+    color: #d9534f;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+
+/* ==============================
+   KARAR KUTULARI
+============================== */
+
+.alt-baslik {
+    font-size: 12px;
+    font-weight: bold;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.detay-kutulari {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.d-kutu {
+    flex: 1;
+
+    padding: 12px;
+
+    text-align: center;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+    font-size: 13px;
+
+    border: 1px solid #eee;
+}
+
+.kirmizi-kutu {
+    background: #fff5f5;
+    color: #c9302c;
+    border-color: #ffd1d1;
+}
+
+.yesil-kutu {
+    background: #f4fbf7;
+    color: #28a745;
+    border-color: #cceedd;
+}
+
+
+/* ==============================
+   AÇIKLAMA
+============================== */
+
+.aciklama-metni {
+    background: #f8f9fa;
+
+    padding: 15px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    margin-bottom: 20px;
+
+    border-left: 4px solid #800020;
+}
+
+
+/* ==============================
+   FOTOĞRAF / VİDEO
+============================== */
+
+.medya-alani {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+}
+
+.medya-icerik {
+    flex: 1;
+    min-width: 0;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+    border: 1px solid #ddd;
+
+    background: #000;
+}
+
+.medya {
+    width: 100%;
+    height: auto;
+
+    display: none;
+}
+
+.medya.aktif {
+    display: block;
+}
+
+video.medya {
+    width: 100%;
+    background: #000;
+}
+
+
+/* ==============================
+   FOTOĞRAF / VİDEO OKLARI
+============================== */
+
+.medya-ok {
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #800020;
+
+    font-size: 40px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    padding: 0 5px;
+
+    flex-shrink: 0;
+
+    transition: transform 0.2s;
+}
+
+.medya-ok:hover {
+    transform: scale(1.18);
+}
+
+.medya-ok.gizli-ok {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+/* ==============================
+   GİZLİ KART
+============================== */
+
+.gizli {
+    display: none !important;
+}
+
+
+/* ==============================
+   TELEFON
+============================== */
+
+@media(max-width:900px) {
+
+    .grid-container {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px) {
+
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .mini-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .takim-logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .takim-alan {
+        font-size: 12px;
+    }
+
+    .skor-rakam {
+        font-size: 22px;
+    }
+
+    .detay-kutulari {
+        flex-direction: column;
+    }
+
+    .medya-ok {
+        font-size: 30px;
+    }
+
+    .cok-yakinda {
+        font-size: 38px;
+        padding: 18px 22px;
+    }
+
+}
+
+
+.site-bilgi {
+    max-width: 1200px;
+    margin: 22px auto 0;
+    padding: 0 20px;
+    text-align: center;
+    color: #800020;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+
+/* ANA SAYFADA TÜM MAÇLARDA LOGOLARI İKİ YANA AYIR */
+.card .mac-baslik {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.card .mac-baslik > span {
+    flex: 1;
+    text-align: center;
+}
+
+.card .mac-baslik .mini-logo {
+    flex-shrink: 0;
+}
+
+
+/* ÜST MENÜ LOGO BOYUTU */
+.site-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+
+/* FOTOĞRAF BÜYÜTME */
+.medya[src] {
+    cursor: zoom-in;
+}
+
+.image-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0,0,0,.88);
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.image-lightbox.active {
+    display: flex;
+}
+
+.image-lightbox img {
+    max-width: 95vw;
+    max-height: 92vh;
+    object-fit: contain;
+    border-radius: 10px;
+    cursor: zoom-out;
+    box-shadow: 0 12px 45px rgba(0,0,0,.5);
+}
+
+.image-lightbox-close {
+    position: fixed;
+    top: 18px;
+    right: 28px;
+    color: white;
+    font-size: 46px;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+}
+
+
+/* TÜM BÜYÜTÜLEN FOTOĞRAFLAR AYNI ORANDA / AYNI ALANDA */
+.image-lightbox img {
+    width: 96vw !important;
+    height: 92vh !important;
+    max-width: 96vw !important;
+    max-height: 92vh !important;
+    object-fit: contain !important;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     ⭐ FOTOĞRAF VE VİDEO AYARLARI - EN KOLAY BULUNACAK BÖLÜM ⭐
+
+     NOT:
+     Aşağıdaki liste hangi maçta hangi dosya adlarının kullanıldığını gösterir.
+     Asıl <img> ve <video loop> blokları ilgili maçın DETAY bölümündedir.
+     Ctrl+F ile "1. MAÇ MEDYA", "2. MAÇ MEDYA" diye arayabilirsin.
+
+     1. MAÇ MEDYA
+     Fotoğraf: resimler/pozisyon1.png
+     Video:     videolar/pozisyon1.mp4
+
+     2. MAÇ MEDYA
+     Fotoğraflar:
+       resimler/pozisyon2-1.png
+       resimler/pozisyon2-2.png
+     Videolar:
+       videolar/pozisyon2-1.mp4
+       videolar/pozisyon2-2.mp4
+
+     3-6. MAÇ MEDYA
+     Aynı fotoğraf/video sistemi 3, 4, 5 ve 6. maçlarda da hazır.
+     Örnek 3. maç:
+       resimler/pozisyon3-1.png
+       resimler/pozisyon3-2.png
+       videolar/pozisyon3-1.mp4
+       videolar/pozisyon3-2.mp4
+
+     VİDEO ÇOĞALTMA:
+     İlgili maçın <video loop> bloğunu kopyala.
+     Örnek 3. video: videolar/pozisyon2-3.mp4
+
+     FOTOĞRAF ÇOĞALTMA:
+     İlgili maçın <img> satırını kopyala.
+     Örnek 3. fotoğraf: resimler/pozisyon2-3.png
+
+     ÖNEMLİ: Önce fotoğrafları, sonra videoları sırala.
+========================================================= -->
+
+
+
+<!-- ==============================
+     ÜST MENÜ
+============================== -->
+
+<header>
+
+    <div class="logo">
+    <img src="resimler/logo.png" class="site-logo">
+    Süper Lig Hakem Hataları
+</div>
+
+    <nav>
+        <a href="#">HATALAR</a>
+    </nav>
+
+</header>
+
+
+<div class="site-bilgi">
+    Bu sitede, Süper Lig'in ilk haftası hariç diğer tüm haftalarında yapılan hakem hataları yer almaktadır.
+</div>
+
+
+
+<!-- ==============================
+     ÇOK YAKINDA
+============================== -->
+
+<div id="cokYakinda" class="cok-yakinda">
+    Çok Yakında Erişime Açılacak
+</div>
+
+
+<!-- ==============================
+     ANA SAYFA
+============================== -->
+
+<div class="container">
+
+    <h2 class="section-title">
+        Hatalı Pozisyonlar
+    </h2>
+
+    <div class="grid-container">
+
+<!-- 1. MAÇ -->
+
+        <a href="#detay1" class="card">
+
+            <div class="card-header">
+
+                <span class="skor-etiket">
+                    9' Skor 0-0
+                </span>
+
+            </div>
+
+
+            <div
+            class="posizyon-gorsel"
+            style="
+            background-image:
+            linear-gradient(
+                rgba(0,0,0,0.2),
+                rgba(0,0,0,0.2)
+            ),
+            url('resimler/pozisyon1.png');
+            ">
+
+                <span class="etiket">
+                    VERİLMEYEN SARI KART
+                </span>
+
+                <span class="hafta-etiket">
+                    2. HAFTA
+                </span>
+
+                <span class="detayi-gor">
+                    🔍 Detayı Gör
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="mac-baslik">
+
+                    <img
+                    src="resimler/erzurumspor.png"
+                    class="mini-logo">
+
+                    <span style="white-space: nowrap;">
+                        Erzurumspor - Galatasaray
+                    </span>
+
+                    <img
+                    src="resimler/galatasaray.png"
+                    class="mini-logo">
+
+                </div>
+
+            </div>
+
+        </a>
+
+        
+<!-- 2. MAÇ -->
+
+        <a href="#detay2" class="card">
+
+            <div class="card-header">
+                <span class="skor-etiket">
+                    39' Skor 0-2
+                </span>
+            </div>
+
+            <div
+            class="posizyon-gorsel"
+            style="
+            background-image:
+            linear-gradient(
+                rgba(0,0,0,0.2),
+                rgba(0,0,0,0.2)
+            ),
+            url('resimler/pozisyon2-1.png');
+            ">
+
+                <span class="etiket">
+                    VERİLMEYEN SARI KART
+                </span>
+
+                <span class="hafta-etiket">
+                    2. HAFTA
+                </span>
+
+                <span class="detayi-gor">
+                    🔍 Detayı Gör
+                </span>
+
+            </div>
+
+            <div class="card-body">
+                <div class="mac-baslik">
+
+                    <img
+                    src="resimler/erzurumspor.png"
+                    class="mini-logo">
+
+                    Erzurumspor - Galatasaray
+
+                    <img
+                    src="resimler/galatasaray.png"
+                    class="mini-logo">
+
+                </div>
+            </div>
+
+        </a>
+
+
+
+<!-- 3. MAÇ -->
+
+        <a href="#detay3" class="card">
+
+            <div class="card-header">
+                <span class="skor-etiket">
+                    74' Skor 0-3
+                </span>
+            </div>
+
+            <div
+            class="posizyon-gorsel"
+            style="
+            background-image:
+            linear-gradient(
+                rgba(0,0,0,0.2),
+                rgba(0,0,0,0.2)
+            ),
+            url('resimler/pozisyon3-1.png');
+            ">
+
+                <span class="etiket">
+                    VERİLMEYEN SARI KART
+                </span>
+
+                <span class="hafta-etiket">
+                    2. HAFTA
+                </span>
+
+                <span class="detayi-gor">
+                    🔍 Detayı Gör
+                </span>
+
+            </div>
+
+            <div class="card-body">
+                <div class="mac-baslik">
+
+                    <img
+                    src="resimler/erzurumspor.png"
+                    class="mini-logo">
+
+                    Erzurumspor - Galatasaray
+
+                    <img
+                    src="resimler/galatasaray.png"
+                    class="mini-logo">
+
+                </div>
+            </div>
+
+        </a>
+
+
+
+<!-- 4. MAÇ -->
+
+        <a href="#detay4" class="card">
+
+            <div class="card-header">
+                <span class="skor-etiket">
+                    15' Skor 1-1
+                </span>
+            </div>
+
+            <div
+            class="posizyon-gorsel"
+            style="
+            background-image:
+            linear-gradient(
+                rgba(0,0,0,0.2),
+                rgba(0,0,0,0.2)
+            ),
+            url('resimler/pozisyon4-1.png');
+            ">
+
+                <span class="etiket">
+                    YANLIŞ VERİLEN PENALTI
+                </span>
+
+                <span class="hafta-etiket">
+                    2. HAFTA
+                </span>
+
+                <span class="detayi-gor">
+                    🔍 Detayı Gör
+                </span>
+
+            </div>
+
+            <div class="card-body">
+                <div class="mac-baslik">
+
+                    <img
+                    src="resimler/fenerbahce.png"
+                    class="mini-logo">
+
+                    Fenerbahçe - Konyaspor
+
+                    <img
+                    src="resimler/konyaspor.png"
+                    class="mini-logo">
+
+                </div>
+            </div>
+
+        </a>
+
+
+
+<!-- 5. MAÇ -->
+
+        <a href="#detay5" class="card gizli">
+
+            <div class="card-header">
+                <span class="skor-etiket">
+                    67' Skor 1-1
+                </span>
+            </div>
+
+            <div
+            class="posizyon-gorsel"
+            style="
+            background-image:
+            linear-gradient(
+                rgba(0,0,0,0.2),
+                rgba(0,0,0,0.2)
+            ),
+            url('resimler/pozisyon5-1.png');
+            ">
+
+                <span class="etiket">
+                    VERİLMEYEN PENALTI
+                </span>
+
+                <span class="hafta-etiket">
+                    2. HAFTA
+                </span>
+
+                <span class="detayi-gor">
+                    🔍 Detayı Gör
+                </span>
+
+            </div>
+
+            <div class="card-body">
+                <div class="mac-baslik">
+
+                    <img
+                    src="resimler/takim5-ev.png"
+                    class="mini-logo">
+
+                    5. MAÇ EV SAHİBİ - 5. MAÇ DEPLASMAN
+
+                    <img
+                    src="resimler/takim5-dep.png"
+                    class="mini-logo">
+
+                </div>
+            </div>
+
+        </a>
+
+
+
+<!-- 6. MAÇ -->
+
+        <a href="#detay6" class="card gizli">
+
+            <div class="card-header">
+                <span class="skor-etiket">
+                    67' Skor 1-1
+                </span>
+            </div>
+
+            <div
+            class="posizyon-gorsel"
+            style="
+            background-image:
+            linear-gradient(
+                rgba(0,0,0,0.2),
+                rgba(0,0,0,0.2)
+            ),
+            url('resimler/pozisyon6-1.png');
+            ">
+
+                <span class="etiket">
+                    VERİLMEYEN PENALTI
+                </span>
+
+                <span class="hafta-etiket">
+                    2. HAFTA
+                </span>
+
+                <span class="detayi-gor">
+                    🔍 Detayı Gör
+                </span>
+
+            </div>
+
+            <div class="card-body">
+                <div class="mac-baslik">
+
+                    <img
+                    src="resimler/takim6-ev.png"
+                    class="mini-logo">
+
+                    6. MAÇ EV SAHİBİ - 6. MAÇ DEPLASMAN
+
+                    <img
+                    src="resimler/takim6-dep.png"
+                    class="mini-logo">
+
+                </div>
+            </div>
+
+        </a>
+
+
+
+    </div>
+
+</div>
+
+
+<!-- ==============================
+     1. MAÇ DETAY PENCERESİ
+============================== -->
+
+<div class="modal-overlay" id="detay1">
+
+    <div class="modal-box">
+
+        <a href="#" class="modal-close">
+            ✕
+        </a>
+
+
+        <div class="modal-title">
+            ERZURUMSPOR - GALATASARAY
+        </div>
+
+
+        <div class="takimlar-skor">
+
+
+            <div class="takim-alan">
+
+                <img
+                src="resimler/erzurumspor.png"
+                class="takim-logo">
+
+                ERZURUMSPOR
+
+            </div>
+
+
+            <div class="skor-merkez">
+
+                <div class="skor-rakam">
+                    0-0
+                </div>
+
+                <div class="mac-dakika">
+                    9. DAKİKA
+                </div>
+
+            </div>
+
+
+            <div class="takim-alan">
+
+                <img
+                src="resimler/galatasaray.png"
+                class="takim-logo">
+
+                GALATASARAY
+
+            </div>
+
+
+        </div>
+
+
+        <div class="alt-baslik">
+            POZİSYON KARARI
+        </div>
+
+
+        <div class="detay-kutulari">
+
+            <div class="d-kutu kirmizi-kutu">
+
+                HAKEMİN KARARI
+                <br>
+                FAUL
+
+            </div>
+
+
+            <div class="d-kutu yesil-kutu">
+
+                DOĞRU KARAR
+                <br>
+                FAUL + SARI KART
+
+            </div>
+
+        </div>
+
+
+        <div class="aciklama-metni">
+
+            Bu pozisyonda hakem, faulü verdi ancak Barış Alper Yılmaz'a faul yapan oyuncuya yalnızca uyarıda bulundu. Hakemin oyuncuya sarı kart göstermesi gerekiyordu.
+
+        </div>
+
+
+        <!-- FOTOĞRAF / VİDEO -->
+
+        <div class="medya-alani">
+
+
+            <button
+            class="medya-ok sol-medya-ok gizli-ok"
+            data-media-prev="medya1">
+
+                ❮
+
+            </button>
+
+
+            <div class="medya-icerik" id="medya1">
+
+                <!-- 1. MAÇ: 1 FOTOĞRAF -->
+                <img
+                src="resimler/pozisyon1.png"
+                class="medya aktif">
+
+                <!-- 1. MAÇ: 1 VİDEO -->
+                <video
+                class="medya"
+                controls
+                preload="auto"
+                loop>
+                    <source
+                    src="videolar/pozisyon1.mp4"
+                    type="video/mp4">
+                </video>
+
+            </div>
+
+
+            <button
+            class="medya-ok sag-medya-ok"
+            data-media-next="medya1">
+
+                ❯
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ==============================
+     2. MAÇ DETAY PENCERESİ
+============================== -->
+
+<div class="modal-overlay" id="detay2">
+
+    <div class="modal-box">
+
+        <a href="#" class="modal-close">✕</a>
+
+        <div class="modal-title">
+            ERZURUMSPOR - GALATASARAY</div>
+
+        <div class="takimlar-skor">
+
+            <div class="takim-alan">
+                <img
+                src="resimler/erzurumspor.png"
+                class="takim-logo">
+                ERZURUMSPOR
+            </div>
+
+            <div class="skor-merkez">
+                <div class="skor-rakam">
+                    0-2
+                </div>
+                <div class="mac-dakika">
+                    39. DAKİKA
+                </div>
+            </div>
+
+            <div class="takim-alan">
+                <img
+                src="resimler/galatasaray.png"
+                class="takim-logo">
+                GALATASARAY
+            </div>
+
+        </div>
+
+        <div class="alt-baslik">
+            POZİSYON KARARI
+        </div>
+
+        <div class="detay-kutulari">
+
+            <div class="d-kutu kirmizi-kutu">
+                HAKEMİN KARARI
+                <br>
+                FAUL
+            </div>
+
+            <div class="d-kutu yesil-kutu">
+                DOĞRU KARAR
+                <br>
+                FAUL + SARI KART
+            </div>
+
+        </div>
+
+        <div class="aciklama-metni">
+            Bu pozisyonda hakem, faulü verdi ancak Yunus Akgün'ün ayağına basan oyuncuya sarı kart göstermedi. Hakemin faul yapan oyuncuya sarı kart göstermesi gerekiyordu.
+        </div>
+
+        <!-- 2 FOTOĞRAF + 2 VİDEO -->
+        <div class="medya-alani">
+
+            <button
+            class="medya-ok sol-medya-ok gizli-ok"
+            data-media-prev="medya2">
+                ❮
+            </button>
+
+            <div class="medya-icerik" id="medya2">
+
+                <!-- 2. MAÇ: 1 FOTOĞRAF -->
+                <img
+                src="resimler/pozisyon2-1.png"
+                class="medya aktif">
+
+                <!-- 2. MAÇ: 1 VİDEO -->
+                <video
+                class="medya"
+                controls
+                preload="auto"
+                loop>
+                    <source
+                    src="videolar/pozisyon2.mp4"
+                    type="video/mp4">
+                </video>
+
+            </div>
+
+            <button
+            class="medya-ok sag-medya-ok"
+            data-media-next="medya2">
+                ❯
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==============================
+     3. MAÇ DETAY PENCERESİ
+============================== -->
+
+<div class="modal-overlay" id="detay3">
+
+    <div class="modal-box">
+
+        <a href="#" class="modal-close">✕</a>
+
+        <div class="modal-title">
+            ERZURUMSPOR - GALATASARAY</div>
+
+        <div class="takimlar-skor">
+
+            <div class="takim-alan">
+                <img
+                src="resimler/erzurumspor.png"
+                class="takim-logo">
+                ERZURUMSPOR
+            </div>
+
+            <div class="skor-merkez">
+                <div class="skor-rakam">
+                    0-3
+                </div>
+                <div class="mac-dakika">
+                    74. DAKİKA
+                </div>
+            </div>
+
+            <div class="takim-alan">
+                <img
+                src="resimler/galatasaray.png"
+                class="takim-logo">
+                GALATASARAY
+            </div>
+
+        </div>
+
+        <div class="alt-baslik">
+            POZİSYON KARARI
+        </div>
+
+        <div class="detay-kutulari">
+
+            <div class="d-kutu kirmizi-kutu">
+                HAKEMİN KARARI
+                <br>
+                FAUL
+            </div>
+
+            <div class="d-kutu yesil-kutu">
+                DOĞRU KARAR
+                <br>
+                FAUL + SARI KART
+            </div>
+
+        </div>
+
+        <div class="aciklama-metni">
+            Bu pozisyonda hakem, faulü verdi ancak rakibinin ayağının üstüne basan Singo'ya sarı kart göstermedi. Hakemin oyuncuya sarı kart göstermesi gerekiyordu.
+        </div>
+
+        <!-- 2 FOTOĞRAF + 2 VİDEO -->
+        <div class="medya-alani">
+
+            <button
+            class="medya-ok sol-medya-ok gizli-ok"
+            data-media-prev="medya3">
+                ❮
+            </button>
+
+            <div class="medya-icerik" id="medya3">
+
+                <!-- 3. MAÇ: 1 FOTOĞRAF -->
+                <img
+                src="resimler/pozisyon3-1.png"
+                class="medya aktif">
+
+                <!-- 3. MAÇ: 1 VİDEO -->
+                <video
+                class="medya"
+                controls
+                preload="auto"
+                loop>
+                    <source
+                    src="videolar/pozisyon3.mp4"
+                    type="video/mp4">
+                </video>
+
+            </div>
+
+            <button
+            class="medya-ok sag-medya-ok"
+            data-media-next="medya3">
+                ❯
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==============================
+     4. MAÇ DETAY PENCERESİ
+============================== -->
+
+<div class="modal-overlay" id="detay4">
+
+    <div class="modal-box">
+
+        <a href="#" class="modal-close">✕</a>
+
+        <div class="modal-title">
+            FENERBAHÇE - KONYASPOR</div>
+
+        <div class="takimlar-skor">
+
+            <div class="takim-alan">
+                <img
+                src="resimler/fenerbahce.png"
+                class="takim-logo">
+                FENERBAHÇE
+            </div>
+
+            <div class="skor-merkez">
+                <div class="skor-rakam">
+                    1-1
+                </div>
+                <div class="mac-dakika">
+                    15. DAKİKA
+                </div>
+            </div>
+
+            <div class="takim-alan">
+                <img
+                src="resimler/konyaspor.png"
+                class="takim-logo">
+                KONYASPOR
+            </div>
+
+        </div>
+
+        <div class="alt-baslik">
+            POZİSYON KARARI
+        </div>
+
+        <div class="detay-kutulari">
+
+            <div class="d-kutu kirmizi-kutu">
+                HAKEMİN KARARI
+                <br>
+                PENALTI
+            </div>
+
+            <div class="d-kutu yesil-kutu">
+                DOĞRU KARAR
+                <br>
+                DEVAM
+            </div>
+
+        </div>
+
+        <div class="aciklama-metni">
+            Bu pozisyonda hakem, topun Adil'in eline çarptığı gerekçesiyle Fenerbahçe lehine penaltı kararı verdi. Ancak Adil'in kolu doğal konumda olduğu ve top yakın mesafeden geldiği için bu pozisyon penaltı olmamalıydı. Hakemin penaltı vermemesi gerekiyordu.
+        </div>
+
+        <!-- 1 FOTOĞRAF + 1 VİDEO -->
+        <div class="medya-alani">
+
+            <button
+            class="medya-ok sol-medya-ok gizli-ok"
+            data-media-prev="medya4">
+                ❮
+            </button>
+
+            <div class="medya-icerik" id="medya4">
+
+                <!--
+                ==========================================
+                4. MAÇ MEDYA AYARI
+
+                FOTOĞRAF EKLEMEK İÇİN:
+                Aşağıdaki <img ...> satırlarından kopyala.
+
+                VİDEO EKLEMEK İÇİN:
+                Aşağıdaki <video ... loop> bloğundan kopyala.
+
+                ÖNEMLİ:
+                Önce bütün FOTOĞRAFLARI,
+                sonra bütün VİDEOLARI ekle.
+                Böylece sıralama:
+                Fotoğraf → Video olur.
+                ==========================================
+                -->
+
+                <!-- FOTOĞRAFLAR -->
+
+                <img
+                src="resimler/pozisyon4-1.png"
+                class="medya aktif">
+<!-- VİDEOLAR -->
+
+                <video
+                class="medya"
+                controls
+                preload="auto" loop>
+                    <source
+                    src="videolar/pozisyon4-1.mp4"
+                    type="video/mp4">
+                </video>
+</div>
+
+            <button
+            class="medya-ok sag-medya-ok"
+            data-media-next="medya4">
+                ❯
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==============================
+     5. MAÇ DETAY PENCERESİ
+============================== -->
+
+<div class="modal-overlay" id="detay5">
+
+    <div class="modal-box">
+
+        <a href="#" class="modal-close">✕</a>
+
+        <div class="modal-title">
+            5. MAÇ EV SAHİBİ - 5. MAÇ DEPLASMAN</div>
+
+        <div class="takimlar-skor">
+
+            <div class="takim-alan">
+                <img
+                src="resimler/takim5-ev.png"
+                class="takim-logo">
+                5. MAÇ EV SAHİBİ
+            </div>
+
+            <div class="skor-merkez">
+                <div class="skor-rakam">
+                    1 - 1
+                </div>
+                <div class="mac-dakika">
+                    67. DAKİKA
+                </div>
+            </div>
+
+            <div class="takim-alan">
+                <img
+                src="resimler/takim5-dep.png"
+                class="takim-logo">
+                5. MAÇ DEPLASMAN
+            </div>
+
+        </div>
+
+        <div class="alt-baslik">
+            POZİSYON KARARI
+        </div>
+
+        <div class="detay-kutulari">
+
+            <div class="d-kutu kirmizi-kutu">
+                HAKEMİN KARARI
+                <br>
+                DEVAM
+            </div>
+
+            <div class="d-kutu yesil-kutu">
+                DOĞRU KARAR
+                <br>
+                PENALTI
+            </div>
+
+        </div>
+
+        <div class="aciklama-metni">
+            Ceza sahasında yaşanan pozisyonda hakem oyunu devam ettirdi.
+            Pozisyonun penaltı olarak değerlendirilmesi gerektiği düşünüldü.
+        </div>
+
+        <!-- 2 FOTOĞRAF + 2 VİDEO -->
+        <div class="medya-alani">
+
+            <button
+            class="medya-ok sol-medya-ok gizli-ok"
+            data-media-prev="medya5">
+                ❮
+            </button>
+
+            <div class="medya-icerik" id="medya5">
+
+                <!--
+                ==========================================
+                5. MAÇ MEDYA AYARI
+
+                FOTOĞRAF EKLEMEK İÇİN:
+                Aşağıdaki <img ...> satırlarından kopyala.
+
+                VİDEO EKLEMEK İÇİN:
+                Aşağıdaki <video ... loop> bloğundan kopyala.
+
+                ÖNEMLİ:
+                Önce bütün FOTOĞRAFLARI,
+                sonra bütün VİDEOLARI ekle.
+                Böylece sıralama:
+                Fotoğraf → Fotoğraf → Video → Video olur.
+                ==========================================
+                -->
+
+                <!-- FOTOĞRAFLAR -->
+
+                <img
+                src="resimler/pozisyon5-1.png"
+                class="medya aktif">
+
+                <img
+                src="resimler/pozisyon5-2.png"
+                class="medya">
+
+
+                <!-- VİDEOLAR -->
+
+                <video
+                class="medya"
+                controls
+                preload="auto" loop>
+                    <source
+                    src="videolar/pozisyon5-1.mp4"
+                    type="video/mp4">
+                </video>
+
+                <video
+                class="medya"
+                controls
+                preload="auto" loop>
+                    <source
+                    src="videolar/pozisyon5-2.mp4"
+                    type="video/mp4">
+                </video>
+
+            </div>
+
+            <button
+            class="medya-ok sag-medya-ok"
+            data-media-next="medya5">
+                ❯
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==============================
+     6. MAÇ DETAY PENCERESİ
+============================== -->
+
+<div class="modal-overlay" id="detay6">
+
+    <div class="modal-box">
+
+        <a href="#" class="modal-close">✕</a>
+
+        <div class="modal-title">
+            6. MAÇ EV SAHİBİ - 6. MAÇ DEPLASMAN</div>
+
+        <div class="takimlar-skor">
+
+            <div class="takim-alan">
+                <img
+                src="resimler/takim6-ev.png"
+                class="takim-logo">
+                6. MAÇ EV SAHİBİ
+            </div>
+
+            <div class="skor-merkez">
+                <div class="skor-rakam">
+                    1 - 1
+                </div>
+                <div class="mac-dakika">
+                    67. DAKİKA
+                </div>
+            </div>
+
+            <div class="takim-alan">
+                <img
+                src="resimler/takim6-dep.png"
+                class="takim-logo">
+                6. MAÇ DEPLASMAN
+            </div>
+
+        </div>
+
+        <div class="alt-baslik">
+            POZİSYON KARARI
+        </div>
+
+        <div class="detay-kutulari">
+
+            <div class="d-kutu kirmizi-kutu">
+                HAKEMİN KARARI
+                <br>
+                DEVAM
+            </div>
+
+            <div class="d-kutu yesil-kutu">
+                DOĞRU KARAR
+                <br>
+                PENALTI
+            </div>
+
+        </div>
+
+        <div class="aciklama-metni">
+            Ceza sahasında yaşanan pozisyonda hakem oyunu devam ettirdi.
+            Pozisyonun penaltı olarak değerlendirilmesi gerektiği düşünüldü.
+        </div>
+
+        <!-- 2 FOTOĞRAF + 2 VİDEO -->
+        <div class="medya-alani">
+
+            <button
+            class="medya-ok sol-medya-ok gizli-ok"
+            data-media-prev="medya6">
+                ❮
+            </button>
+
+            <div class="medya-icerik" id="medya6">
+
+                <!--
+                ==========================================
+                6. MAÇ MEDYA AYARI
+
+                FOTOĞRAF EKLEMEK İÇİN:
+                Aşağıdaki <img ...> satırlarından kopyala.
+
+                VİDEO EKLEMEK İÇİN:
+                Aşağıdaki <video ... loop> bloğundan kopyala.
+
+                ÖNEMLİ:
+                Önce bütün FOTOĞRAFLARI,
+                sonra bütün VİDEOLARI ekle.
+                Böylece sıralama:
+                Fotoğraf → Fotoğraf → Video → Video olur.
+                ==========================================
+                -->
+
+                <!-- FOTOĞRAFLAR -->
+
+                <img
+                src="resimler/pozisyon6-1.png"
+                class="medya aktif">
+
+                <img
+                src="resimler/pozisyon6-2.png"
+                class="medya">
+
+
+                <!-- VİDEOLAR -->
+
+                <video
+                class="medya"
+                controls
+                preload="auto" loop>
+                    <source
+                    src="videolar/pozisyon6-1.mp4"
+                    type="video/mp4">
+                </video>
+
+                <video
+                class="medya"
+                controls
+                preload="auto" loop>
+                    <source
+                    src="videolar/pozisyon6-2.mp4"
+                    type="video/mp4">
+                </video>
+
+            </div>
+
+            <button
+            class="medya-ok sag-medya-ok"
+            data-media-next="medya6">
+                ❯
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================
+   ÇOK YAKINDA
+
+   true  = GÖSTER
+   false = GİZLE
+========================================= */
+
+const cokYakindaGoster = false;
+
+const cokYakinda =
+document.getElementById("cokYakinda");
+
+if (cokYakindaGoster) {
+    cokYakinda.style.display = "block";
+} else {
+    cokYakinda.style.display = "none";
+}
+
+
+/* =========================================
+   VİDEOLARI ÖNCEDEN YÜKLE
+========================================= */
+
+window.addEventListener("load", function() {
+
+    document
+    .querySelectorAll("video")
+    .forEach(function(video) {
+
+        video.preload = "auto";
+        video.load();
+
+    });
+
+});
+
+
+/* =========================================
+   FOTOĞRAF / VİDEO GALERİSİ
+========================================= */
+
+const medyaIndexleri = {};
+
+function medyaDurumunuGuncelle(id) {
+
+    const alan = document.getElementById(id);
+    if (!alan) return;
+
+    const medyalar = Array.from(alan.querySelectorAll(".medya"));
+    if (!medyalar.length) return;
+
+    if (!(id in medyaIndexleri)) {
+        medyaIndexleri[id] = 0;
+    }
+
+    const index = medyaIndexleri[id];
+
+    medyalar.forEach(function(medya, i) {
+
+        if (i === index) {
+            medya.classList.add("aktif");
+
+            if (medya.tagName === "VIDEO") {
+                medya.muted = true;
+                medya.play().catch(function() {});
+            }
+        } else {
+            if (medya.tagName === "VIDEO") {
+                medya.pause();
+            }
+            medya.classList.remove("aktif");
+        }
+
+    });
+
+    const medyaAlani = alan.closest(".medya-alani");
+    const solOk = medyaAlani.querySelector(".sol-medya-ok");
+    const sagOk = medyaAlani.querySelector(".sag-medya-ok");
+
+    if (index === 0) {
+        solOk.classList.add("gizli-ok");
+    } else {
+        solOk.classList.remove("gizli-ok");
+    }
+
+    if (index === medyalar.length - 1) {
+        sagOk.classList.add("gizli-ok");
+    } else {
+        sagOk.classList.remove("gizli-ok");
+    }
+
+}
+
+function sonrakiMedya(id) {
+
+    const alan = document.getElementById(id);
+    if (!alan) return;
+
+    const medyalar = alan.querySelectorAll(".medya");
+    if (!(id in medyaIndexleri)) medyaIndexleri[id] = 0;
+
+    if (medyaIndexleri[id] < medyalar.length - 1) {
+        medyaIndexleri[id]++;
+    }
+
+    medyaDurumunuGuncelle(id);
+}
+
+function oncekiMedya(id) {
+
+    if (!(id in medyaIndexleri)) medyaIndexleri[id] = 0;
+
+    if (medyaIndexleri[id] > 0) {
+        medyaIndexleri[id]--;
+    }
+
+    medyaDurumunuGuncelle(id);
+}
+
+
+/* OK BUTONLARI */
+
+document
+.querySelectorAll("[data-media-next]")
+.forEach(function(buton) {
+
+    buton.addEventListener("click", function() {
+        sonrakiMedya(buton.dataset.mediaNext);
+    });
+
+});
+
+document
+.querySelectorAll("[data-media-prev]")
+.forEach(function(buton) {
+
+    buton.addEventListener("click", function() {
+        oncekiMedya(buton.dataset.mediaPrev);
+    });
+
+});
+
+
+/* İLK DURUMLARI AYARLA */
+
+document
+.querySelectorAll(".medya-icerik")
+.forEach(function(alan) {
+
+    medyaIndexleri[alan.id] = 0;
+    medyaDurumunuGuncelle(alan.id);
+
+});
+
+
+/* =========================================
+   PENCERE KAPANINCA MEDYAYI BAŞA AL
+========================================= */
+
+document
+.querySelectorAll(".modal-close")
+.forEach(function(kapat) {
+
+    kapat.addEventListener("click", function() {
+
+        document
+        .querySelectorAll(".medya-icerik")
+        .forEach(function(alan) {
+
+            alan
+            .querySelectorAll("video")
+            .forEach(function(video) {
+
+                video.pause();
+                video.currentTime = 0;
+
+            });
+
+            medyaIndexleri[alan.id] = 0;
+            medyaDurumunuGuncelle(alan.id);
+
+        });
+
+    });
+
+});
+
+</script>
+
+
+<div id="imageLightbox" class="image-lightbox" aria-hidden="true">
+    <span class="image-lightbox-close">&times;</span>
+    <img id="imageLightboxImg" src="" alt="Büyütülmüş fotoğraf">
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImg = document.getElementById('imageLightboxImg');
+    const closeBtn = lightbox.querySelector('.image-lightbox-close');
+
+    document.querySelectorAll('img.medya').forEach(function (img) {
+        img.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            lightboxImg.src = this.src;
+            lightbox.classList.add('active');
+            lightbox.setAttribute('aria-hidden', 'false');
+        });
+    });
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImg.src = '';
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox || e.target === lightboxImg) {
+            closeLightbox();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightbox();
+        }
+    });
+});
+</script>
+
+</body>
+</html>
