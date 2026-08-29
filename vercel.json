@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index(20260829-001826)(1).html"
+    }
+  ]
+}
